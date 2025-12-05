@@ -1,7 +1,7 @@
+import { RouterProvider } from "react-router-dom";
+import router from "./RouterBackOffice/RouterApp";
 const App = () => {
-  return (
-   <div>test</div>
-  );
+  return <RouterProvider router={router} />;
 };
 
 export default App;
