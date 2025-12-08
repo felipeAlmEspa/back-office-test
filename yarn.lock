@@ -946,10 +946,9 @@
   dependencies:
     minipass "^7.0.4"
 
-"@itsa-develop/itsa-fe-components@^0.0.27":
+"@itsa-develop/itsa-fe-components@file:../../itsa-fe-components/itsa-develop-itsa-fe-components-v0.0.27-a8.tgz":
   version "0.0.27"
-  resolved "https://npm.pkg.github.com/download/@itsa-develop/itsa-fe-components/0.0.27/6c2a2dc9bae7d0d377432ff3f34f343bbaf6a509#6c2a2dc9bae7d0d377432ff3f34f343bbaf6a509"
-  integrity sha512-VofLoDJciLKDcBc3nykeP7tS4OOofzZv6mR2tMLG9fgPks8isPGBoagh/98wmVCnbAD1t/Gnz6Jn3R+TGEmcRA==
+  resolved "file:../../itsa-fe-components/itsa-develop-itsa-fe-components-v0.0.27-a8.tgz#7167b3be7de8ae49598f43f418be9b6cd490dd2e"
   dependencies:
     "@emotion/react" "^11.14.0"
     "@emotion/styled" "^11.14.0"

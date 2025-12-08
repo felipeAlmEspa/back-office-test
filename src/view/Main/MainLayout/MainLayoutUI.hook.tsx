@@ -1,137 +1,55 @@
 import {
-  getNumberFromStorage,
-  IAgency,
-  IUserInformation,
-  TExtendedMenuItem,
-  useControlActions,
-} from "@itsa-develop/itsa-fe-components";
-import { MenuProps } from "antd";
-import { useCustomNavigation } from "@/hooks/useCustomNavigation";
-import { useGetPermissions } from "@/services/security/security.service";
-import { useAppLayoutStore } from "@itsa-develop/itsa-fe-components";
-import { useUserInformation } from "@/services/security/security.service";
-import { useNotification } from "@itsa-develop/itsa-fe-components";
-import { useAuthStore } from "@/store/auth.store";
-import { ReactNode, useCallback, useState } from "react";
+  useGetPermissions,
+  useUserInformation,
+} from "@/services/security/security.service";
+import { IModule, useAppLayoutStore } from "@itsa-develop/itsa-fe-components";
+import { ReactNode, useMemo, useRef, useState } from "react";
 import { useEffect } from "react";
-import { useMemo } from "react";
-import { UserOutlined } from "@ant-design/icons";
-import { LogoutOutlined } from "@ant-design/icons";
-import { CURRENT_MICRO_FRONTEND, KEY_STORE } from "@/constants";
-import { getClaimCodeByRefreshToken } from "@/api/config";
-import { ELocalStorageKeys } from "@itsa-develop/itsa-fe-components";
-import { navigateToMicroFrontend } from "@/helper";
-import { useNavigate } from "react-router-dom";
-
+import { MenuProps } from "antd";
+import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
+import { useAuthStore } from "@/store/auth.store";
 export interface IMainLayoutUIProps {
-  onClickOptionMenu: (option: { key: string; item: TExtendedMenuItem }) => void;
-  isLoadingNavigation: boolean;
-  isLoadingPermissions: boolean;
-  userActions: MenuProps;
   children?: ReactNode;
-  localPath: string;
-  isProfileDrawerOpen: boolean;
-  onCloseProfileDrawer: () => void;
-  userInformation: IUserInformation | undefined;
-  isLoadingUserInformation: boolean;
-  currentModuleId: number | undefined;
+  onClickOptionMenu: (module: IModule) => void;
+  isLoadingPermissions: boolean;
+  userOptions: MenuProps;
 }
 
 export const useMainLayoutUI = (): IMainLayoutUIProps => {
-  const navigate = useNavigate();
-  const { setCurrentPath } = useControlActions();
-  const localPath = location.pathname;
-  const { navigateRoute, isLoadingExternalPath: isLoadingNavigation } =
-    useCustomNavigation();
-  const { data: permissions, isLoading: isLoadingPermissions } =
-    useGetPermissions();
-  const { setUserName, setUserRole } = useAppLayoutStore();
-  const setAgencies = useAppLayoutStore((state) => state.setAgencies);
-  const setCurrentModule = useAppLayoutStore((state) => state.setCurrentModule);
-  const setModulesAgency = useAppLayoutStore((state) => state.setModulesAgency);
-  const currentModule = useAppLayoutStore((state) => state.currentModule);
-  const currentModuleId = currentModule?.id;
-  const { data: userInformation, isLoading: isLoadingUserInformation } =
-    useUserInformation();
-  const userName = userInformation?.name;
-
-  const { logout } = useAuthStore();
+  const initApp = useRef(false);
   const [userOptions, setUserOptions] = useState<MenuProps>({});
-  const [isProfileDrawerOpen, setIsProfileDrawerOpen] = useState(false);
-  const { openNotificationWithIcon } = useNotification();
+  const { logout } = useAuthStore();
+  const {
+    data: permissions,
+    isLoading: isLoadingPermissions,
+    isError: isErrorPermissions,
+  } = useGetPermissions();
+  const setAgencies = useAppLayoutStore((state) => state.setAgencies);
+  const setUserName = useAppLayoutStore((state) => state.setUserName);
+  const setUserRole = useAppLayoutStore((state) => state.setUserRole);
 
-  const onOpenProfileDrawer = () => setIsProfileDrawerOpen(true);
-  const onCloseProfileDrawer = () => setIsProfileDrawerOpen(false);
+  const currentModuleId = useAppLayoutStore((state) => state.currentModule?.id);
 
-  const agencies = useMemo(() => {
-    if (!isLoadingPermissions) {
-      return permissions?.agencies || [];
-    }
-    return [];
-  }, [permissions, isLoadingPermissions]);
-
-  const setModulesAgencyCallback = useCallback(
-    (agencies: IAgency[]) => {
-      const moduleId = getNumberFromStorage(ELocalStorageKeys.moduleId);
-      if (moduleId) {
-        for (const agency of agencies) {
-          if (!agency.modules) continue;
-          for (const module of agency.modules) {
-            if (module.id === moduleId) {
-              setCurrentModule(module);
-              setModulesAgency(agency.modules);
-              return;
-            }
-          }
-        }
-      }
-    },
-    [setCurrentModule, setModulesAgency]
-  );
-
+  const { data: userInformation } = useUserInformation();
+  const userName = userInformation?.name || "";
   const userRoles = useMemo(() => {
     return userInformation?.roles ?? [];
   }, [userInformation?.roles]);
 
-  useEffect(() => {
-    setCurrentPath(localPath);
-  }, [localPath, setCurrentPath]);
+  const agencies = permissions?.agencies ?? [];
+
+  const onClickOptionMenu = (module: IModule) => {
+    console.log(module);
+  };
 
   useEffect(() => {
-    if (currentModuleId) {
-      if (!isLoadingUserInformation) {
-        const userModule = userRoles.find(
-          (role) => role.moduleId === currentModuleId
-        );
-        setUserName(userInformation?.name || "");
-        if (userModule) {
-          setUserRole(userModule);
-        }
-      }
-    }
-  }, [
-    currentModuleId,
-    isLoadingUserInformation,
-    setUserName,
-    setUserRole,
-    userInformation,
-    userRoles,
-  ]);
-
-  useEffect(() => {
-    if (agencies) {
+    if (initApp.current) return;
+    if (isLoadingPermissions === false && isErrorPermissions === false) {
+      initApp.current = true;
       setAgencies(agencies);
-      setModulesAgencyCallback(agencies);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [agencies]);
-
-  useEffect(() => {
-    if (!isLoadingUserInformation && userName) {
-      setUserName(userName);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userName, isLoadingUserInformation]);
 
   useEffect(() => {
     setUserOptions({
@@ -140,9 +58,7 @@ export const useMainLayoutUI = (): IMainLayoutUIProps => {
           key: "profile",
           label: userName || "Sin Nombre Usuario",
           icon: <UserOutlined />,
-          onClick: () => {
-            onOpenProfileDrawer();
-          },
+          onClick: () => {},
         },
         {
           key: "logout",
@@ -158,64 +74,29 @@ export const useMainLayoutUI = (): IMainLayoutUIProps => {
   }, [userName]);
 
   useEffect(() => {
-    const entorno = currentModule?.entorno || ""; // en este caso me va ha dar BACKOFFICE
-    if (
-      CURRENT_MICRO_FRONTEND.toLowerCase() === entorno.toLowerCase() ||
-      !currentModule
-    ) {
-      return;
-    }
-    const getNavClaimCode = async () => {
-      const claimCode = await getClaimCodeByRefreshToken();
-      let newParamsNewMicro: string | null = null;
-      if (claimCode) {
-        newParamsNewMicro = `?claimCode=${claimCode}&newRoute=/home&moduleId=${currentModule?.id}`;
-        localStorage.removeItem(ELocalStorageKeys.moduleId);
-        localStorage.removeItem(ELocalStorageKeys.agencyId);
-        navigateToMicroFrontend(entorno, newParamsNewMicro);
+    if (currentModuleId) {
+      if (!isLoadingPermissions) {
+        const userModule = userRoles.find(
+          (role) => role.moduleId === currentModuleId
+        );
+        setUserName(userInformation?.name || "");
+        if (userModule) {
+          setUserRole(userModule);
+        }
       }
-    };
-    getNavClaimCode();
-  }, [currentModule, navigate]);
-
-  const onClickOptionMenu = (option: {
-    key: string;
-    item: TExtendedMenuItem;
-  }) => {
-    localStorage.setItem(KEY_STORE.LAST_PATH, option.key);
-    const path = option.item.data?.path;
-    const url = option.item.data?.url;
-    const pathPadre = option.item.data?.pathPadre;
-
-    if (path && pathPadre) {
-      navigateRoute({ pathPadre, path, url });
-    } else {
-      openNotificationWithIcon({
-        type: "info",
-        message: "No se a configurado la ruta.",
-        description: "Por favor, comunícate con el administrador",
-      });
     }
-  };
-
-  const normalizeLocalPath = useMemo(() => {
-    const lastPath = localStorage.getItem(KEY_STORE.LAST_PATH);
-    if (lastPath) {
-      return lastPath;
-    }
-    return localPath.replace(/^\/+/, "");
-  }, [localPath]);
+  }, [
+    currentModuleId,
+    isLoadingPermissions,
+    setUserName,
+    setUserRole,
+    userInformation,
+    userRoles,
+  ]);
 
   return {
     onClickOptionMenu,
-    isLoadingNavigation,
     isLoadingPermissions,
-    userActions: userOptions,
-    localPath: normalizeLocalPath,
-    isProfileDrawerOpen,
-    onCloseProfileDrawer,
-    userInformation,
-    isLoadingUserInformation,
-    currentModuleId,
+    userOptions,
   };
 };
