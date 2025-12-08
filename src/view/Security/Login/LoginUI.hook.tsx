@@ -133,7 +133,7 @@ export const useLoginUI = (): ILoginUIHook => {
                     setToken(data.access);
                     localStorage.setItem(KEY_STORE.REFRESH_TOKEN, data.refresh);
                     refetchPermissions();
-                    navigate("/dashboard/home", { replace: true });
+                    navigate("/home", { replace: true });
                   },
                   onError: (error) => {
                     handleErrorMessage(error);

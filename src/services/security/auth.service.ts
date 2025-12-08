@@ -39,7 +39,7 @@ export const redirectIfAuthenticatedLoader: LoaderFunction = async () => {
   const { isAuthenticated } = await resolveSession();
 
   if (isAuthenticated) {
-    return redirect("/dashboard/home");
+    return redirect("/home");
   }
 
   return null;
@@ -50,7 +50,7 @@ export const redirectIfAuthenticatedLoader: LoaderFunction = async () => {
  */
 export const rootRedirectLoader: LoaderFunction = async () => {
   const { isAuthenticated } = await resolveSession();
-  return redirect(isAuthenticated ? "/dashboard/home" : "/login");
+  return redirect(isAuthenticated ? "/home" : "/login");
 };
 
 
@@ -67,7 +67,7 @@ export const validateAccessRouteAsync =
     const canAccess = await simulateRouteAccessValidation(routePath);
 
     if (!canAccess) {
-      return redirect("/dashboard/home");
+      return redirect("/home");
     }
 
     return null;
