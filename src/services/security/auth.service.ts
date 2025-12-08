@@ -1,37 +1,74 @@
-// import { apiInstance } from "@/api/config";
-// import { BASE_URL, APIS_VERSIONS, KEY_STORE } from "@/constants";
-// import { API_ROUTES } from "@/api/routes";
-// import { redirect } from "react-router-dom";
+import { fetchAccessToken } from "@/api/config";
+import { redirect, type LoaderFunction } from "react-router-dom";
 
-import { useAuthStore } from "@/store/auth.store";
-import { redirect } from "react-router-dom";
+const resolveSession = async () => {
+  const token = await fetchAccessToken();
+  return {
+    token,
+    isAuthenticated: Boolean(token),
+  };
+};
 
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+// Simulates an async validation call for route-level access.
+const simulateRouteAccessValidation = async (routePath?: string) => {
+  await wait(1000);
+  // Example rule: block access to a specific route name.
+  return routePath !== "forbidden-route";
+};
 
-export const validataAccessRefreshToken = async () => {
-  const { token } = useAuthStore.getState();
+/**
+ * Loader used by private routes (dashboard and nested paths).
+ * Redirects unauthenticated users to the login page and lets the request continue otherwise.
+ */
+export const validataAccessRefreshToken: LoaderFunction = async () => {
+  const { isAuthenticated } = await resolveSession();
 
-  if (token) {
-    return redirect("/dashboard");
+  if (!isAuthenticated) {
+    return redirect("/login");
   }
 
-  return redirect("/login");
-
-
-  // try {
-  //   const response = await apiInstance.post(
-  //     `${BASE_URL}${APIS_VERSIONS.security}${API_ROUTES.refreshToken}`,
-  //     {
-  //       refresh: localStorage.getItem(KEY_STORE.REFRESH_TOKEN),
-  //     }
-  //   );
-  //   if (response.status === 200) {
-  //     return response.data;
-  //   } else {
-  //     return redirect("/login");
-  //   }
-  // } catch (error) {
-  //   console.log("error =>", error);
-  //   return redirect("/login");
-  // }
+  return null;
 };
+
+/**
+ * Loader for the login page – if a session already exists, send the user to the dashboard.
+ */
+export const redirectIfAuthenticatedLoader: LoaderFunction = async () => {
+  const { isAuthenticated } = await resolveSession();
+
+  if (isAuthenticated) {
+    return redirect("/dashboard/home");
+  }
+
+  return null;
+};
+
+/**
+ * Loader for the root route. Chooses the correct initial page based on the session.
+ */
+export const rootRedirectLoader: LoaderFunction = async () => {
+  const { isAuthenticated } = await resolveSession();
+  return redirect(isAuthenticated ? "/dashboard/home" : "/login");
+};
+
+
+export const validateAccessRouteAsync =
+  (routePath?: string): LoaderFunction =>
+  async () => {
+    console.log('TEST => INGRESAMOS AL VALIDACION');
+    const { isAuthenticated } = await resolveSession();
+
+    if (!isAuthenticated) {
+      return redirect("/login");
+    }
+
+    const canAccess = await simulateRouteAccessValidation(routePath);
+
+    if (!canAccess) {
+      return redirect("/dashboard/home");
+    }
+
+    return null;
+  };
