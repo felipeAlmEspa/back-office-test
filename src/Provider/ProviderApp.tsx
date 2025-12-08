@@ -8,15 +8,17 @@ import { ReactNode } from "react";
 export const ProviderApp = ({ children }: { children: ReactNode }) => {
   const queryClient = new QueryClient();
   return (
-    <UIProvider>
-      <QueryClientProvider client={queryClient}>
-        <ControlActionsProvider fnApiValidatePermissionAction={async () => {
-          return true;
-        }}>
+    <ControlActionsProvider
+      fnApiValidatePermissionAction={async () => {
+        return true;
+      }}
+    >
+      <UIProvider>
+        <QueryClientProvider client={queryClient}>
           {children}
           <ReactQueryDevtools />
-        </ControlActionsProvider>
-      </QueryClientProvider>
-    </UIProvider>
+        </QueryClientProvider>
+      </UIProvider>
+    </ControlActionsProvider>
   );
 };

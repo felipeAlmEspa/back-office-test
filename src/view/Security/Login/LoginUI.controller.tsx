@@ -2,7 +2,8 @@
 
 import { LoginUIView } from "./LoginUI.view";
 import { useLoginUI } from "./LoginUI.hook";
-export const LoginUI = () => {
+
+const LoginUI = () => {
   const hook = useLoginUI();
 
 
@@ -12,3 +13,5 @@ export const LoginUI = () => {
     />
   );
 };
+
+export default LoginUI;

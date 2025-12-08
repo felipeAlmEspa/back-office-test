@@ -24,7 +24,7 @@ import {
 import { useExchangeCode } from "@/services/security/security.service";
 import { useLogin } from "@/services/security/security.service";
 import { useAuthStore } from "@/store/auth.store";
-import { ActiveSessionsUI } from "../ActiveSessions/ActiveSessionsUI.controller";
+
 import { Button } from "@itsa-develop/itsa-fe-components";
 import { useErrorFormulario } from "@/hooks/useErrorNotification";
 import { AxiosErrorType } from "@/types/axios";
@@ -77,11 +77,7 @@ export const useLoginUI = (): ILoginUIHook => {
       title: "Sesiones activas",
       height: "50vh",
       content: (
-        <ActiveSessionsUI
-          activeSessions={activeSessions}
-          username={control._getWatch("username")}
-          password={control._getWatch("password")}
-        />
+        <div>testss{activeSessions.length}</div>
       ),
       footer: (
         <div className="flex flex-row w-full justify-end gap-2">
