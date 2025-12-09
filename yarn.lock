@@ -946,9 +946,9 @@
   dependencies:
     minipass "^7.0.4"
 
-"@itsa-develop/itsa-fe-components@file:../itsa-fe-components/itsa-develop-itsa-fe-components-v0.0.27-f6.tgz":
+"@itsa-develop/itsa-fe-components@file:../itsa-fe-components/itsa-develop-itsa-fe-components-v0.0.27-f8.tgz":
   version "0.0.27"
-  resolved "file:../itsa-fe-components/itsa-develop-itsa-fe-components-v0.0.27-f6.tgz#3baf3d82c330ae97596276a2ada1e463ba4d1568"
+  resolved "file:../itsa-fe-components/itsa-develop-itsa-fe-components-v0.0.27-f8.tgz#faea7e5da68e76b8bf79df5be3811bf4d567efb4"
   dependencies:
     "@emotion/react" "^11.14.0"
     "@emotion/styled" "^11.14.0"

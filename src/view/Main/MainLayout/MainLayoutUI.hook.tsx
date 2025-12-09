@@ -11,7 +11,7 @@ import { useEffect } from "react";
 import { MenuProps } from "antd";
 import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useAuthStore } from "@/store/auth.store";
-import { useNavigate, useNavigation } from "react-router-dom";
+import { NavigateFunction, useNavigate, useNavigation } from "react-router-dom";
 export interface IMainLayoutUIProps {
   children?: ReactNode;
   onClickOptionMenu: (module: IModule) => void;
@@ -19,6 +19,7 @@ export interface IMainLayoutUIProps {
   userOptions: MenuProps;
   handleNavigate: (path: string) => void;
   isNavigationLoading: boolean;
+  navigateReactRouterDom: NavigateFunction;
 }
 
 export const useMainLayoutUI = (): IMainLayoutUIProps => {
@@ -32,7 +33,7 @@ export const useMainLayoutUI = (): IMainLayoutUIProps => {
     isLoading: isLoadingPermissions,
     isError: isErrorPermissions,
   } = useGetPermissions();
-  console.log('navigation.state =>',navigation.state);
+  
   const isNavigationLoading = navigation.state !== "idle";
   const isLoadingApp = isLoadingPermissions;
   const setAgencies = useAppLayoutStore((state) => state.setAgencies);
@@ -116,5 +117,6 @@ export const useMainLayoutUI = (): IMainLayoutUIProps => {
     userOptions,
     handleNavigate,
     isNavigationLoading,
+    navigateReactRouterDom: navigate,
   };
 };

@@ -1,3 +1,5 @@
+"use client";
+
 const TestAsyncPage = () => {
   return (
     <div>

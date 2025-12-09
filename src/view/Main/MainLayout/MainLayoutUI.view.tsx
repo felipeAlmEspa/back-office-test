@@ -9,17 +9,19 @@ export const MainLayoutUIView = ({
   userOptions,
   handleNavigate,
   isNavigationLoading,
+  navigateReactRouterDom,
 }: IMainLayoutUIProps) => {
   return (
     <>
       <AppLayout
+        navigateApp={navigateReactRouterDom}
         loadingAppLayout={isLoadingApp}
         onClickOptionMenu={(option) => {
           handleNavigate(option.item.data?.path ?? "");
         }}
         userActions={userOptions}
       >
-        {isNavigationLoading ? <LoadingApp /> : children}
+        {isNavigationLoading || isLoadingApp ? <LoadingApp /> : children}
       </AppLayout>
       <UserProfileDrawer
         open={false}

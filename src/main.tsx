@@ -1,3 +1,4 @@
+"use client";
 import { createRoot } from "react-dom/client";
 import "@itsa-develop/itsa-fe-components/styles.css";
 import "./styles.css";
