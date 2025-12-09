@@ -1,4 +1,5 @@
 import { noPictures } from "@itsa-develop/itsa-fe-components";
+import { QueryClient } from "@tanstack/react-query";
 
 export const APIS_VERSIONS = {
   security: import.meta.env.VITE_API_VERSION_SEC,
@@ -87,3 +88,5 @@ export const OPTIONS_BOOLEAN = [
   { label: "Sí", value: 1 },
   { label: "No", value: 0 },
 ];
+
+export const queryClient = new QueryClient();

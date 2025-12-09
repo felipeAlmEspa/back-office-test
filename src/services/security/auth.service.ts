@@ -23,7 +23,6 @@ const simulateRouteAccessValidation = async (routePath?: string) => {
  * Redirects unauthenticated users to the login page and lets the request continue otherwise.
  */
 export const validataAccessRefreshToken: LoaderFunction = async () => {
-
   const { isAuthenticated } = await resolveSession();
 
   if (!isAuthenticated) {
@@ -54,13 +53,16 @@ export const rootRedirectLoader: LoaderFunction = async () => {
   return redirect(isAuthenticated ? "/home" : "/login");
 };
 
+// const fetchPermissions = async () => {
+//   return await apiInstance.get<IValidateRouteResponse>(
+//     `${APIS_VERSIONS.security}${API_ROUTES.permissions}?mode_environment=${TYPE_ENVIRONMENT}`
+//   );
+// };
 
 export const validateAccessRouteAsync =
   (routePath?: string): LoaderFunction =>
   async () => {
-    console.log('routePath =>',routePath);
-    console.warn('TEST => INGRESAMOS AL VALIDACION');
-    
+
     const { isAuthenticated } = await resolveSession();
 
     if (!isAuthenticated) {
