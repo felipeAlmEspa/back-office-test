@@ -62,6 +62,20 @@ export const rootRedirectLoader: LoaderFunction = async () => {
 export const validateAccessRouteAsync =
   (routePath?: string): LoaderFunction =>
   async () => {
+    const localPath = location.pathname;
+
+    if (localPath === `/${routePath}`) {
+      return null;
+    }
+
+    console.warn('TEST => INGRESAMOS AL VALIDACION');
+
+
+    // 1.- api para validar permisos a la ruta en específico
+
+    // 2.- Valido si es una ruta de frontoffice o backoffice hola
+
+
 
     const { isAuthenticated } = await resolveSession();
 
