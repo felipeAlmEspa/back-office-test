@@ -946,9 +946,9 @@
   dependencies:
     minipass "^7.0.4"
 
-"@itsa-develop/itsa-fe-components@file:../../itsa-fe-components/itsa-develop-itsa-fe-components-v0.0.27-b1.tgz":
+"@itsa-develop/itsa-fe-components@file:../itsa-fe-components/itsa-develop-itsa-fe-components-v0.0.27-f3.tgz":
   version "0.0.27"
-  resolved "file:../../itsa-fe-components/itsa-develop-itsa-fe-components-v0.0.27-b1.tgz#62d3e4b3df4daf03225680183f1d7043914a30c7"
+  resolved "file:../itsa-fe-components/itsa-develop-itsa-fe-components-v0.0.27-f3.tgz#f04529ce61af776d933a5aa680ff0337ab30442d"
   dependencies:
     "@emotion/react" "^11.14.0"
     "@emotion/styled" "^11.14.0"
@@ -966,6 +966,7 @@
     react-hook-form "^7.62.0"
     react-number-format "^5.4.3"
     react-router-dom "^7.6.0"
+    uuid4 "^2.0.3"
     zod "^4.1.5"
     zustand "^5.0.3"
 
@@ -3624,6 +3625,11 @@ uri-js@^4.2.2:
   integrity sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==
   dependencies:
     punycode "^2.1.0"
+
+uuid4@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/uuid4/-/uuid4-2.0.3.tgz#241e5dfe1704a79c52e2aa40e7e581a5e7b01ab4"
+  integrity sha512-CTpAkEVXMNJl2ojgtpLXHgz23dh8z81u6/HEPiQFOvBc/c2pde6TVHmH4uwY0d/GLF3tb7+VDAj4+2eJaQSdZQ==
 
 vite@^7.1.2:
   version "7.1.2"

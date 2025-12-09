@@ -2,21 +2,28 @@ import {
   useGetPermissions,
   useUserInformation,
 } from "@/services/security/security.service";
-import { IModule, useAppLayoutStore } from "@itsa-develop/itsa-fe-components";
+import {
+  IModule,
+  useAppLayoutStore,
+  useMenuDataStore,
+} from "@itsa-develop/itsa-fe-components";
 import { ReactNode, useMemo, useRef, useState } from "react";
 import { useEffect } from "react";
 import { MenuProps } from "antd";
 import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useAuthStore } from "@/store/auth.store";
+import { useNavigate } from "react-router-dom";
 export interface IMainLayoutUIProps {
   children?: ReactNode;
   onClickOptionMenu: (module: IModule) => void;
   isLoadingPermissions: boolean;
   userOptions: MenuProps;
+  handleNavigate: (path: string) => void;
 }
 
 export const useMainLayoutUI = (): IMainLayoutUIProps => {
   const initApp = useRef(false);
+  const navigate = useNavigate();
   const [userOptions, setUserOptions] = useState<MenuProps>({});
   const { logout } = useAuthStore();
   const {
@@ -27,19 +34,20 @@ export const useMainLayoutUI = (): IMainLayoutUIProps => {
   const setAgencies = useAppLayoutStore((state) => state.setAgencies);
   const setUserName = useAppLayoutStore((state) => state.setUserName);
   const setUserRole = useAppLayoutStore((state) => state.setUserRole);
-
-  const currentModuleId = useAppLayoutStore((state) => state.currentModule?.id);
-
   const { data: userInformation } = useUserInformation();
+  const menuData = useMenuDataStore(state => state.menuData);
+  console.log('menuData =>',menuData);
+  const currentModule = useAppLayoutStore((state) => state.currentModule);
+  const currentModuleId = currentModule?.id;
+  const agencies = permissions?.agencies ?? [];
+
   const userName = userInformation?.name || "";
   const userRoles = useMemo(() => {
     return userInformation?.roles ?? [];
   }, [userInformation?.roles]);
 
-  const agencies = permissions?.agencies ?? [];
-
   const onClickOptionMenu = (module: IModule) => {
-    console.log(module);
+    console.log('module =>',module);
   };
 
   useEffect(() => {
@@ -94,9 +102,16 @@ export const useMainLayoutUI = (): IMainLayoutUIProps => {
     userRoles,
   ]);
 
+  const handleNavigate = (path: string) => {
+    if (path.length > 0) {
+      navigate(path);
+    }
+  };
+
   return {
     onClickOptionMenu,
     isLoadingPermissions,
     userOptions,
+    handleNavigate,
   };
 };

@@ -6,19 +6,16 @@ export const MainLayoutUIView = ({
   children,
   isLoadingPermissions,
   userOptions,
+  handleNavigate,
 }: IMainLayoutUIProps) => {
   return (
     <>
       <AppLayout
         loadingAppLayout={isLoadingPermissions}
-        currentPath={""}
-        onClickOptionMenu={() => {}}
+        onClickOptionMenu={(option) => {
+          handleNavigate(option.item.data?.path ?? "");
+        }}
         userActions={userOptions}
-        onChangeModule={() => {}}
-        onChangeAgency={() => {}}
-        openKeysMenuOptions={[]}
-        itemsMenuOptions={[]}
-        onOpenKeysChange={() => {}}
       >
         {children}
       </AppLayout>

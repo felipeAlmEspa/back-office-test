@@ -13,6 +13,10 @@ export const privateRoutes: RouteObject[] = [
     element: <HomeUI />,
   },
   {
+    path: "security/accesses/roles",
+    element: <div>Roles</div>,
+  },
+  {
     path: "vehicles/models-management",
     element: <TestAsyncPage />,
   },
