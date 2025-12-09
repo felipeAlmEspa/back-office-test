@@ -1,23 +1,25 @@
 import { IMainLayoutUIProps } from "./MainLayoutUI.hook";
 import { AppLayout } from "@itsa-develop/itsa-fe-components";
 import { UserProfileDrawer } from "@/components/UserProfile/UserProfileDrawer";
+import { LoadingApp } from "@/components/Loadings/LoadingApp";
 
 export const MainLayoutUIView = ({
   children,
-  isLoadingPermissions,
+  isLoadingApp,
   userOptions,
   handleNavigate,
+  isNavigationLoading,
 }: IMainLayoutUIProps) => {
   return (
     <>
       <AppLayout
-        loadingAppLayout={isLoadingPermissions}
+        loadingAppLayout={isLoadingApp}
         onClickOptionMenu={(option) => {
           handleNavigate(option.item.data?.path ?? "");
         }}
         userActions={userOptions}
       >
-        {children}
+        {isNavigationLoading ? <LoadingApp /> : children}
       </AppLayout>
       <UserProfileDrawer
         open={false}

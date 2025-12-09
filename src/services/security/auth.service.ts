@@ -23,6 +23,7 @@ const simulateRouteAccessValidation = async (routePath?: string) => {
  * Redirects unauthenticated users to the login page and lets the request continue otherwise.
  */
 export const validataAccessRefreshToken: LoaderFunction = async () => {
+
   const { isAuthenticated } = await resolveSession();
 
   if (!isAuthenticated) {
@@ -57,7 +58,9 @@ export const rootRedirectLoader: LoaderFunction = async () => {
 export const validateAccessRouteAsync =
   (routePath?: string): LoaderFunction =>
   async () => {
-    console.log('TEST => INGRESAMOS AL VALIDACION');
+    console.log('routePath =>',routePath);
+    console.warn('TEST => INGRESAMOS AL VALIDACION');
+    
     const { isAuthenticated } = await resolveSession();
 
     if (!isAuthenticated) {

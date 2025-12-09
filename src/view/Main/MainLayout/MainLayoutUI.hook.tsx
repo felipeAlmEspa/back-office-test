@@ -5,25 +5,26 @@ import {
 import {
   IModule,
   useAppLayoutStore,
-  useMenuDataStore,
 } from "@itsa-develop/itsa-fe-components";
 import { ReactNode, useMemo, useRef, useState } from "react";
 import { useEffect } from "react";
 import { MenuProps } from "antd";
 import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useAuthStore } from "@/store/auth.store";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useNavigation } from "react-router-dom";
 export interface IMainLayoutUIProps {
   children?: ReactNode;
   onClickOptionMenu: (module: IModule) => void;
-  isLoadingPermissions: boolean;
+  isLoadingApp: boolean;
   userOptions: MenuProps;
   handleNavigate: (path: string) => void;
+  isNavigationLoading: boolean;
 }
 
 export const useMainLayoutUI = (): IMainLayoutUIProps => {
   const initApp = useRef(false);
   const navigate = useNavigate();
+  const navigation = useNavigation();
   const [userOptions, setUserOptions] = useState<MenuProps>({});
   const { logout } = useAuthStore();
   const {
@@ -31,12 +32,13 @@ export const useMainLayoutUI = (): IMainLayoutUIProps => {
     isLoading: isLoadingPermissions,
     isError: isErrorPermissions,
   } = useGetPermissions();
+  console.log('navigation.state =>',navigation.state);
+  const isNavigationLoading = navigation.state !== "idle";
+  const isLoadingApp = isLoadingPermissions;
   const setAgencies = useAppLayoutStore((state) => state.setAgencies);
   const setUserName = useAppLayoutStore((state) => state.setUserName);
   const setUserRole = useAppLayoutStore((state) => state.setUserRole);
   const { data: userInformation } = useUserInformation();
-  const menuData = useMenuDataStore(state => state.menuData);
-  console.log('menuData =>',menuData);
   const currentModule = useAppLayoutStore((state) => state.currentModule);
   const currentModuleId = currentModule?.id;
   const agencies = permissions?.agencies ?? [];
@@ -110,8 +112,9 @@ export const useMainLayoutUI = (): IMainLayoutUIProps => {
 
   return {
     onClickOptionMenu,
-    isLoadingPermissions,
+    isLoadingApp,
     userOptions,
     handleNavigate,
+    isNavigationLoading,
   };
 };

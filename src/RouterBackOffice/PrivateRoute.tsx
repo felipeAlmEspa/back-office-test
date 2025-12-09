@@ -1,7 +1,5 @@
 import { Navigate, RouteObject } from "react-router-dom";
 import HomeUI from "@/view/Main/Home/HomeUI.controller";
-import { TestAsyncPage } from "@/view/TestAsyncPage/TestAsyncPage";
-
 
 export const privateRoutes: RouteObject[] = [
   {
@@ -15,9 +13,5 @@ export const privateRoutes: RouteObject[] = [
   {
     path: "security/accesses/roles",
     element: <div>Roles</div>,
-  },
-  {
-    path: "vehicles/models-management",
-    element: <TestAsyncPage />,
   },
 ];

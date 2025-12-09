@@ -8,7 +8,6 @@ import { MainLayoutUI } from "@/view/Main/MainLayout/MainLayoutUI.controller";
 import { RouteObject, createBrowserRouter } from "react-router-dom";
 import { privateRoutes } from "./PrivateRoute";
 
-
 const router = createBrowserRouter([
   {
     path: "/",
